@@ -48,11 +48,35 @@ io.on('connection', (socket) => {
         state[gameCode] = game.gameState;
 
         socket.join(gameCode);
-        socket.number = 1;
+        socket.number = 1;  
 
         socket.emit('playerNumber', 1)
         socket.emit('gameCode', gameCode)
 
+    })
+
+    socket.on('joinGame', (gameCode) => {
+        const room = io.sockets.adapter.rooms[gameCode]
+
+        let players;
+        let playersNum;
+
+        if (room) players = room.sockets
+        if (players) {
+            playersNum = Object.keys(players).length;
+        }
+
+        if (playersNum === 0) {
+            socket.emit('gameNotFound')
+            return;
+        } else if (playersNum > 8) {
+            socket.emit('gameIsFull')
+            return;
+        }
+
+        rooms[socket.id] = gameCode;
+
+        socket.join(gameCode)
     })
     
     socket.on('disconnect', () => {
