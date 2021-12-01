@@ -32,7 +32,7 @@ function Puck(x, y, d) {
     }
   };
 
-  this.draw = () => {
+  this.animate = () => {
     
     this.vx *= this.friction;
     this.vy *= this.friction;

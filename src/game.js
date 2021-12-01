@@ -5,7 +5,6 @@
 // }
 
 const { Puck } = require("./components/Puck");
-const { Player } = require("./components/Player");
 const { Gate } = require("./components/Gate");
 
 var fieldWidth = 800;
@@ -18,7 +17,7 @@ var puck, gate1, gate2;
 const FRAME_RATE = 60;
 
 function Game() {
-    this.gameState = {}
+    this.gameState = {players: {}, puck: {}, gate1: {}, gate2: {}}
     this.fieldWidth = 800;
     this.fieldHeight = 500;
 
@@ -41,11 +40,21 @@ function Game() {
             gateWidth,
             gateHeight
         );
+
+        this.gameState["gate1"] = gate1;
+        this.gameState["gate2"] = gate2;
+        this.gameState["gameStarted"] = this.gameStarted;
     };
 
     this.startGame = () => {
         this.gameStarted = true;
+        this.gameState["gameStarted"] = gameStarted;
     };
+
+    this.update = () => {
+        puck.animate()
+        this.gameState["puck"] = puck;
+    }
 }
 
 module.exports = {

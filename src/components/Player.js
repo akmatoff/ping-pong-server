@@ -60,7 +60,7 @@ function Player(x, y, d) {
     }
   };
 
-  this.update = () => {
+  this.animate = () => {
     this.x = lerp(this.x, mouseX, 0.1);
     this.y = lerp(this.y, mouseY, 0.1);
   };
