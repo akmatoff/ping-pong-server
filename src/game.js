@@ -6,6 +6,7 @@
 
 const { Puck } = require("./components/Puck");
 const { Gate } = require("./components/Gate");
+const { Player } = require("./components/Player");
 
 var fieldWidth = 800;
 var fieldHeight = 500;
@@ -48,12 +49,18 @@ function Game() {
 
     this.startGame = () => {
         this.gameStarted = true;
-        this.gameState["gameStarted"] = gameStarted;
+        this.gameState["gameStarted"] = this.gameStarted;
     };
 
     this.update = () => {
         puck.animate()
         this.gameState["puck"] = puck;
+
+        let players = Object.keys(this.gameState["players"]);
+
+        players.forEach((p) => {
+            p.animate();
+        })
     }
 }
 

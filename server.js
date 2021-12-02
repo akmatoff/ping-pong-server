@@ -21,7 +21,7 @@ function gameStateUpdate(gameState, game) {
     setInterval(() => {
         game.update() // animate the game objects
         io.sockets.emit('gameState', gameState) // send game state to all the sockets
-        console.log('STATE', state)
+        // console.log('STATE', state)
     }, 1000 / FRAME_RATE)
 }
 
@@ -40,7 +40,6 @@ io.on('connection', (socket) => {
 
         // Initialize a new game
         const game = new Game();
-
         game.init();
 
         // New player object
@@ -62,28 +61,36 @@ io.on('connection', (socket) => {
         gameStateUpdate(game.gameState, game)
     })
 
-    socket.on('joinGame', (gameCode) => {
-        const room = io.sockets.adapter.rooms[gameCode] // Search for rooms with the gamecode
+    socket.on('joinGame', joinGame)
 
-        let players;
-        let playersCount;
+    function joinGame(gameCode) {
+      const room = io.sockets.adapter.rooms.get(gameCode); // Search for rooms with the gamecode
 
-        // If room is found
-        if (room) players = room.sockets
-        if (players) playersCount = Object.keys(players).length // Get the length of all the players
+      let players;
+  
+      // If room is found
+      if (room) players = room;
 
-        if (playersCount === 0) {
-            socket.emit('gameNotFound')
-            return;
-        } else if (playersNum > 8) {
-            socket.emit('gameIsFull')
-            return;
-        }
+      let playersCount = players ? players.size : 0;
+  
+      if (playersCount === 0) {
+          socket.emit('gameNotFound')
+          return;
+      } else if (playersCount > 8) {
+          socket.emit('gameIsFull')
+          return;
+      }
+  
+      rooms[socket.id] = gameCode;
+  
+      socket.join(gameCode)
 
-        rooms[socket.id] = gameCode;
+      let player = new Player(Math.random(fieldWidth / 2), Math.random(fieldHeight), 50)
 
-        socket.join(gameCode)
-    })
+      state[gameCode].players[socket.id] = player;
+
+      console.log(room)
+  }
     
     socket.on('disconnect', () => {
         console.log('user disconnected');
