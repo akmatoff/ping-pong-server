@@ -21,7 +21,7 @@ function gameStateUpdate(gameState, game) {
     setInterval(() => {
         game.update() // animate the game objects
         io.sockets.emit('gameState', gameState) // send game state to all the sockets
-        // console.log('STATE', state)
+        console.log('STATE', gameState)
     }, 1000 / FRAME_RATE)
 }
 
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         game.init();
 
         // New player object
-        let player = new Player(Math.random(fieldWidth / 2), Math.random(fieldHeight), 50)
+        let player = new Player(Math.random(fieldWidth / 2) * fieldWidth / 2, Math.random(fieldHeight) * fieldHeight, 50)
 
         // Add player to the game state
         game.gameState.players[socket.id] = player;
@@ -85,12 +85,17 @@ io.on('connection', (socket) => {
   
       socket.join(gameCode)
 
-      let player = new Player(Math.random(fieldWidth / 2), Math.random(fieldHeight), 50)
+      let player = new Player(Math.random(fieldWidth / 2) * fieldWidth / 2, Math.random(fieldHeight) * fieldHeight, 50)
 
+      // Add the new player to the state
       state[gameCode].players[socket.id] = player;
 
       console.log(room)
   }
+
+  socket.on('newGameState', (newGameState, gameCode) => {
+    state[gameCode] = newGameState;
+  })
     
     socket.on('disconnect', () => {
         console.log('user disconnected');

@@ -9,16 +9,16 @@ function Player(x, y, d) {
   this.checkCollision = (object) => {
     // Calculate the distance between the player and object
     let distance =
-      sqrt(pow(this.x - object.x, 2) + pow(this.y - object.y, 2)) -
+      Math.sqrt(Math.pow(this.x - object.x, 2) + Math.pow(this.y - object.y, 2)) -
       (this.r + object.r);
 
     // If distance is less or equal to 0, player has hit the object
     if (distance < 1) {
-      let theta = atan2(this.y - object.y, this.x - object.x);
-      let roundedTheta = round(theta);
+      let theta = Math.atan2(this.y - object.y, this.x - object.x);
+      let roundedTheta = Math.round(theta);
 
-      let sine = sin(theta);
-      let cosine = cos(theta);
+      let sine = Math.sin(theta);
+      let cosine = Math.cos(theta);
 
       object.vx = sine * mouseSpeed + cosine * mouseSpeed;
       object.vy = sine * mouseSpeed - cosine * mouseSpeed;
@@ -60,10 +60,10 @@ function Player(x, y, d) {
     }
   };
 
-  this.animate = () => {
-    this.x = lerp(this.x, mouseX, 0.1);
-    this.y = lerp(this.y, mouseY, 0.1);
-  };
+  // this.animate = () => {
+  //   this.x = lerp(this.x, mouseX, 0.1);
+  //   this.y = lerp(this.y, mouseY, 0.1);
+  // };
 }
 
 module.exports = {
